@@ -1,3 +1,3 @@
 # HousePricePrediction
 Repository for the House Price Prediction project.
-https://colab.research.google.com/drive/1yaWs_ds9hYLBfFv9Nvl7sYyiGqwPPFPs
+https://drive.google.com/drive/folders/1xxvQpRJ5iOA21WXj9xji3Jx9UYZAQ48g?usp=sharing
