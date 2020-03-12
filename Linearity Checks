@@ -1,0 +1,72 @@
+Linearity Checks
+
+import pandas as pd  
+import numpy as np  
+import matplotlib.pyplot as plt  
+import seaborn as seabornInstance 
+from sklearn.model_selection import train_test_split 
+from sklearn.linear_model import LinearRegression
+from sklearn import metrics
+%matplotlib inline
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+
+url = 'https://raw.githubusercontent.com/EssexTeam20/HousePricePrediction/master/trainEdit3.csv'
+trainCSV = pd.read_csv(url)
+url = 'https://raw.githubusercontent.com/EssexTeam20/HousePricePrediction/master/testEdit2.csv'
+testCSV = pd.read_csv(url)
+# Dataset is now stored in a Pandas Dataframe
+trainCSV['YearsSinceRemodel'] = trainCSV['YrSold'] - trainCSV['YearRemodAdd']
+
+#pd.set_option('display.max_rows', 100)
+#print(type(trainCSV))
+#trainCSV
+
+plt.scatter(trainCSV['GrLivArea'], trainCSV['SalePrice'], color = 'red')
+plt.title('Sale Price vs. Aboveground Living Area', fontsize = 15)
+plt.xlabel('GrLivArea', fontsize = 14)
+plt.ylabel('SalePrice', fontsize = 14)
+plt.grid(True)
+plt.show
+
+plt.scatter(trainCSV['TotalBsmtSF'], trainCSV['SalePrice'], color = 'green')
+plt.title('Sale Price vs. Total Basement Area', fontsize = 15)
+plt.xlabel('TotalBsmtSF', fontsize = 14)
+plt.ylabel('SalePrice', fontsize = 14)
+plt.grid(True)
+plt.show
+
+plt.scatter(trainCSV['GarageArea'], trainCSV['SalePrice'], color = 'blue')
+plt.title('Sale Price vs. Garage Area', fontsize = 15)
+plt.xlabel('Garage Area', fontsize = 14)
+plt.ylabel('SalePrice', fontsize = 14)
+plt.grid(True)
+plt.show
+
+plt.scatter(trainCSV['OverallQual'], trainCSV['SalePrice'], color = 'yellow')
+plt.title('Sale Price vs. OverallQual', fontsize = 15)
+plt.xlabel('OverallQual', fontsize = 14)
+plt.ylabel('SalePrice', fontsize = 14)
+plt.grid(True)
+plt.show
+
+plt.scatter(trainCSV['ExterQual'], trainCSV['SalePrice'], color = 'teal')
+plt.title('Sale Price vs. ExterQual', fontsize = 15)
+plt.xlabel('ExterQual', fontsize = 14)
+plt.ylabel('SalePrice', fontsize = 14)
+plt.grid(True)
+plt.show
+
+plt.scatter(trainCSV['YearsSinceRemodel'], trainCSV['SalePrice'], color = 'beige')
+plt.title('Sale Price vs. Years Since Remodel', fontsize = 15)
+plt.xlabel('YearsSinceRemodel', fontsize = 14)
+plt.ylabel('SalePrice', fontsize = 14)
+plt.grid(True)
+plt.show
+
+plt.scatter(trainCSV['BsmtQual'], trainCSV['SalePrice'], color = 'black')
+plt.title('Sale Price vs. BsmtQual', fontsize = 15)
+plt.xlabel('BsmtQual', fontsize = 14)
+plt.ylabel('SalePrice', fontsize = 14)
+plt.grid(True)
+plt.show
