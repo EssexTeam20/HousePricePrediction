@@ -1,0 +1,95 @@
+import pandas as pd  
+import numpy as np  
+import matplotlib.pyplot as plt  
+import seaborn as seabornInstance 
+from sklearn.model_selection import train_test_split 
+from sklearn.linear_model import LinearRegression
+from sklearn import metrics
+%matplotlib inline
+import statsmodels.api as sm
+
+
+url = 'https://raw.githubusercontent.com/EssexTeam20/HousePricePrediction/master/trainEdit3.csv'
+trainCSV = pd.read_csv(url)
+url = 'https://raw.githubusercontent.com/EssexTeam20/HousePricePrediction/master/testEdit2.csv'
+testCSV = pd.read_csv(url)
+# Dataset is now stored in a Pandas Dataframe
+
+pd.set_option('display.max_rows', 10)
+print(type(trainCSV))
+trainCSV
+
+trainCSV['YearsSinceRemodel'] = trainCSV['YrSold'] - trainCSV['YearRemodAdd']
+testCSV['YearsSinceRemodel'] = testCSV['YrSold'] - testCSV['YearRemodAdd']
+
+trainCSV.isnull().any()
+trainCSV = trainCSV.fillna(method='ffill')
+
+X = trainCSV[['OverallQual', 'GarageArea', 'ExterQual']].values
+y = trainCSV['SalePrice'].values
+
+The following graph provides an easy way to see what the average sale price of the set of training houses is.
+
+plt.figure(figsize=(15,10))
+plt.tight_layout()
+seabornInstance.distplot(trainCSV['SalePrice'])
+
+Splits the training data into 80% and 20%, to test how accurate our predictions are. 
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+regressor = LinearRegression()  
+regressor.fit(X_train, y_train)
+
+y_pred = regressor.predict(X_test)
+
+df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+df1 = df.head(25)
+
+df1
+
+The following graph shows how close the predicted price comes to the actual price. (Using the 80/20 split training data.)
+
+df1.plot(kind='bar',figsize=(10,8))
+plt.grid(which='major', linestyle='-', linewidth='0.5', color='teal')
+plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+plt.show()
+
+print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))  
+print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))  
+print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+
+-------------------
+
+
+XTrain = trainCSV[['GrLivArea', 'OverallQual', 'ExterQual', 'TotalBsmtSF']].values#.reshape(-1,1) #Uses the total living area and ____ as variables in predicting the sale price.
+YTrain = trainCSV['SalePrice'].values.reshape(-1,1)
+
+
+XTest = testCSV[['GrLivArea', 'OverallQual', 'ExterQual', 'TotalBsmtSF']].values#.reshape(-1,1)
+
+
+
+
+regressor = LinearRegression()  
+regressor.fit(XTrain,YTrain) #training the algorithm
+
+#To retrieve the intercept:
+print('This is the intercept: ', regressor.intercept_)
+#For retrieving the slope:
+print('These are the coefficients: ', regressor.coef_)
+
+pd.set_option('display.max_rows', 3000)
+
+SalePricePrediction = regressor.predict(XTest)
+predictionCSV = pd.DataFrame({'SalePrice': SalePricePrediction.flatten()})
+predictionCSV.insert(1, 'Id', range(1461, len(predictionCSV) + 1461)) 
+
+predictionCSV['SalePrice'] = predictionCSV.round(decimals=-3) #rounds the predictions to the nearest thousand.
+predictionCSV = predictionCSV[['Id', 'SalePrice']]
+predictionCSV2 = predictionCSV.set_index('Id')
+
+predictionCSV2.shape
+
+predictionCSV2.to_csv('HousePricePredictionTestEdited.csv')
+
+predictionCSV2
